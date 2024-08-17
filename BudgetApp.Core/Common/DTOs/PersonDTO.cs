@@ -1,6 +1,6 @@
 namespace BudgetApp.Core.Common.DTOs;
 
-public class PersonDTO : IMapFrom<Person>
+public class PersonDTO
 {
     public string FirstName { get; set; }
     public string LastName { get; set; }

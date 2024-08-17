@@ -16,4 +16,9 @@
     </PackageReference>
   </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\BudgetApp.Common\BudgetApp.Common.csproj" />
+      <ProjectReference Include="..\BudgetApp.Domain\BudgetApp.Domain.csproj" />
+    </ItemGroup>
+
 </Project>

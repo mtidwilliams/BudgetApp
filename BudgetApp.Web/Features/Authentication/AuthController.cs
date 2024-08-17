@@ -1,3 +1,4 @@
+using BudgetApp.Core.GetPerson.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,7 +25,7 @@ public class AuthController : ControllerBase
             return BadRequest("Invalid client request");
         }
 
-        var allowedToLogin = await _mediator.Send(new AuthenticateCommand { Email = model.Email, Password = model.Password });
+        var allowedToLogin = await _mediator.Send(new LoginUserCommand { Email = model.Email, Password = model.Password });
 
         if (allowedToLogin)
         {

@@ -1,16 +1,21 @@
 using System.Text;
+using BudgetApp.Common;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddCore();
-builder.Services.AddInfrastructure();
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddCore();
+builder.Configuration.AddCommonConfig();
+builder.Services.AddInfrastructure(builder.Configuration);
 
 var appSettings = new AppSettings();
 builder.Configuration.Bind("AppSettings", appSettings);
+
+builder.Services.Configure<AppSettings>(builder.Configuration.GetSection(nameof(AppSettings)));
 
 // Configure JWT Authentication
 builder.Services.AddAuthentication(options =>
@@ -31,8 +36,6 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(appSettings.SecretKey))
     };
 });
-
-builder.Services.Configure<AppSettings>(builder.Configuration.GetSection(nameof(AppSettings)));
 
 builder.Services.AddTransient<ITokenService, TokenService>();
 

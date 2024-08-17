@@ -1,7 +1,9 @@
 
 using Microsoft.EntityFrameworkCore;
+using BudgetApp.Domain.Entities;
 
 namespace BudgetApp.Core.Common.Interfaces;
+
 public interface IDatabaseService
 {
     DbSet<User> Users { get; set; }

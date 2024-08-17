@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using BudgetApp.Core.Common.Interfaces;
+using BudgetApp.Domain.Entities;
 
 namespace BudgetApp.Infrastructure.Data;
 public class BudgetAppDbContext : DbContext, IDatabaseService

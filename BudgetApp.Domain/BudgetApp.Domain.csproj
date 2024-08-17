@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\BudgetApp.Common\BudgetApp.Common.csproj" />
+  </ItemGroup>
+
 </Project>
