@@ -1,0 +1,15 @@
+/* You can add global styles to this file, and also import other style files */
+$primary: #1A659E;
+$secondary: #EFEFD0;
+$info: #FF6B35;
+
+@import '../node_modules/bootstrap/scss/bootstrap.scss';
+
+
+html {
+    height: 100%;
+}
+
+.login-card {
+    max-width: 30rem;
+}

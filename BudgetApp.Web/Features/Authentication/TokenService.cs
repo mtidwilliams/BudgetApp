@@ -1,4 +1,6 @@
 using BudgetApp.Common;
+using BudgetApp.Core.Common.DTOs;
+using BudgetApp.Domain.Entities;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -7,7 +9,7 @@ using System.Text;
 
 public interface ITokenService
 {
-    string GenerateToken(string userName);
+    string GenerateToken(UserDTO user);
 }
 
 public class TokenService : ITokenService
@@ -19,20 +21,21 @@ public class TokenService : ITokenService
         _appSettings = appSettings?.Value;
     }
 
-    public string GenerateToken(string username)
+    public string GenerateToken(UserDTO user)
     {
         var claims = new[]
         {
-            new Claim(JwtRegisteredClaimNames.Sub, username),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
+            new Claim(ClaimTypes.Email, user.Email),
+            //new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appSettings.SecretKey));
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appSettings?.SecretKey ?? Guid.NewGuid().ToString()));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var token = new JwtSecurityToken(
-            _appSettings.Issuer,
-            _appSettings.Audience,
+            _appSettings?.Issuer,
+            _appSettings?.Audience,
             claims,
             expires: DateTime.Now.AddMinutes(30),
             signingCredentials: creds);

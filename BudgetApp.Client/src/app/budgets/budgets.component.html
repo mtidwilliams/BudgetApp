@@ -1,0 +1,71 @@
+<h4 *ngIf="budget">Current Budget</h4>
+<div class="card">
+  <div class="card-body">
+    <p *ngIf="!budget">You currently do not have a budget set up.</p>
+    <p *ngIf="!budget">To get started, please add your first <strong>expense</strong> or <strong>income source</strong>.</p>
+    <app-currentBudget *ngIf="budget" [budget]="budget"></app-currentBudget>
+
+    <button id="addExpenseBtn" type="button" class="btn btn-outline-primary me-3" data-bs-toggle="modal" data-bs-target="#expenseModal">Add Expense</button>
+    <button id="addIncomeBtn" type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#incomeSourceModal">Add Income Source</button>
+
+    <!-- Modals -->
+    <div class="modal fade" id="expenseModal" aria-labelledby="expenseModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="expenseModalLabel">Add Expense</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group row mb-3">
+              <div class="col">
+                <label for="expenseName">Expense Title:</label>
+                <input type="text" id="expenseName" class="form-control" [(ngModel)]="expenseName" name="expenseName" required autofocus>
+              </div>
+              <div class="col">
+                <label for="expenseAmount">Amount:</label>
+                <div class="input-group">
+                  <span class="input-group-text">$</span>
+                  <input type="text" id="expenseAmount" class="form-control" [(ngModel)]="expenseAmount" name="expenseAmount" required>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" (click)="addExpense()">Add</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="incomeSourceModal" aria-labelledby="expenseModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="expenseModalLabel">Add Income Source</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group row mb-3">
+              <div class="col">
+                <label for="incomeSourceName">Income Source Title:</label>
+                <input type="text" id="incomeSourceName" class="form-control" [(ngModel)]="incomeSourceName" name="incomeSourceName" required autofocus>
+              </div>
+              <div class="col">
+                <label for="incomeSourceAmount">Amount:</label>
+                <div class="input-group">
+                  <span class="input-group-text">$</span>
+                  <input type="text" id="incomeSourceAmount" class="form-control" [(ngModel)]="incomeSourceAmount" name="incomeSourceAmount" required>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary" (click)="addIncomeSource()">Add</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

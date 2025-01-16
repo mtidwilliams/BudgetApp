@@ -2,9 +2,10 @@ import { ToastrService } from 'ngx-toastr';
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { clearSpinner } from '../shared/spinner-utils';
 
 @Component({
-  selector: 'app-login',
+  // selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
@@ -33,14 +34,17 @@ export class LoginComponent {
           ['/home'], {
             state: {
               showToast: true,
-              toastMessage: 'Welcome to Build-a-Budget '+(result.firstName ?? '')+'.',
-              toastTitle: 'Success!'
+              toastMessage: 'Welcome to Build-a-Budget, '+result.user.person.firstName+'!',
+              toastTitle: 'Success!',
+              user: result.user
             }
-          }
+          },
         );
       },
       error => {
-        this.error = 'Login failed';
+        this.toastr.error(error.error.message ?? "", 'Login failed.');
+        this.error = 'Login failed.';
+        clearSpinner();
       }
     );
   }

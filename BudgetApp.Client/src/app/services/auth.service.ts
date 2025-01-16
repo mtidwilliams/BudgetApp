@@ -15,8 +15,8 @@ export class AuthService {
     return this.http.post<any>(`${this.apiUrl}/login`, { email, password });
   }
 
-  register(firstName: string, lastName: string, email: string, password: string): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/register`, { firstName: firstName, lastName: lastName, email, password });
+  register(firstName: string, lastName: string, street: string, city: string, state: string, zip: string, email: string, password: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/register`, { firstName: firstName, lastName: lastName, street, city, state, zip, email, password });
   }
 
   logout(): boolean {
@@ -24,6 +24,7 @@ export class AuthService {
     this.router.navigate(['/'], {
       state: {
         showToast: true,
+        toastTitle: 'Success!',
         toastMessage: 'You have been logged out.',
       }
     });

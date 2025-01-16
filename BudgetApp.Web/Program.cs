@@ -1,5 +1,7 @@
+using System.Reflection;
 using System.Text;
 using BudgetApp.Common;
+using BudgetApp.Core.Mappings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
@@ -11,6 +13,9 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddCore();
 builder.Configuration.AddCommonConfig();
 builder.Services.AddInfrastructure(builder.Configuration);
+
+// builder.Services.AddAutoMapper(typeof(MappingProfile));
+// builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
 var appSettings = new AppSettings();
 builder.Configuration.Bind("AppSettings", appSettings);
@@ -47,14 +52,11 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
-// app.UseStaticFiles();
 app.UseRouting();
-
 
 app.MapControllerRoute(
     name: "default",

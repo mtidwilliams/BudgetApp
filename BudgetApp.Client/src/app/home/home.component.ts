@@ -7,13 +7,21 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './home.component.html',
 })
 export class HomeComponent {
+  userFirstName: string = '';
+  userLastName: string = '';
   constructor(private router: Router, private toastr: ToastrService ) {
     // Check if the state exists and show the toast message
     const navigation = this.router.getCurrentNavigation();
     if (navigation?.extras?.state?.['showToast']) {
-      const message = navigation.extras.state['toastMessage'] || 'Action was successful';
-      const title = navigation.extras.state['toastTitle'] || 'Info';
+      const message = navigation?.extras?.state?.['toastMessage'] || 'Action was successful';
+      const title = navigation?.extras?.state?.['toastTitle'] || 'Info';
       this.toastr.success(message, title);
     }
+
+    let user = navigation?.extras?.state?.['user'];
+
+    this.userFirstName = user?.person?.firstName ?? '';
+    this.userLastName = user?.person?.lastName ?? '';
+
   }
 }

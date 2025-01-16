@@ -1,0 +1,20 @@
+<div class="row">
+  <div class="col">
+    <h3>Expenses</h3>
+    <ul class="list-group">
+      <li *ngFor="let expense of budget.expenses" class="list-group-item d-flex justify-content-between align-items-center">
+        {{ expense.name }}
+        <span class="badge badge-primary rounded-pill">${{ expense.amount }}</span>
+      </li>
+    </ul>
+  </div>
+  <div class="col">
+    <h3>Income Sources</h3>
+    <ul class="list-group">
+      <li *ngFor="let incomeSource of budget.income" class="list-group-item">
+        {{ incomeSource.name }}
+        <span class="badge badge-primary rounded-pill">${{ incomeSource.amount }}</span>
+      </li>
+    </ul>
+  </div>
+</div>

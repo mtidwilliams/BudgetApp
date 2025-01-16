@@ -1,4 +1,8 @@
+using BudgetApp.Core.Budgets.Commands;
 using BudgetApp.Core.GetPerson.Queries;
+using BudgetApp.Core.Users.Commands;
+using BudgetApp.Core.Users.Queries;
+using BudgetApp.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,7 +22,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> LoginAsync([FromBody] LoginModel model)
+    public async Task<IActionResult> Login([FromBody] LoginModel model)
     {
         if (model is null)
         {
@@ -29,27 +33,49 @@ public class AuthController : ControllerBase
 
         if (allowedToLogin)
         {
-            var token = _tokenService.GenerateToken(model.Email);
-            var person = await _mediator.Send(new GetPersonQuery { Email = model.Email });
-            return Ok(new { Token = token, FirstName = person?.FirstName });
+            var user = (await _mediator.Send(new GetUserQuery { Email = model.Email }));
+            var token = _tokenService.GenerateToken(user);
+            return Ok(new { Token = token, User = user });
         }
 
-        return Unauthorized();
+        return Conflict(new { message = "Unable to find a user with this email address or password. Please try again." });
     }
 
     [HttpPost("register")]
-    public IActionResult Register([FromBody] RegisterAccountModel model)
+    public async Task<IActionResult> Register([FromBody] RegisterAccountModel model)
     {
-        if (model is null)
+        if (model is null || !ModelState.IsValid)
         {
             return BadRequest("Invalid client request");
         }
 
-        // var userAlreadyExists = _dbService.Users.Any(x => x.Email == model.Email);
-        // if (userAlreadyExists)
-        // {
-        //     return RedirectToAction(nameof(Register), nameof(AuthController));
-        // }
+        var userAlreadyExists = (await _mediator.Send(new GetUserQuery { Email = model.Email })).UserId != Guid.Empty;
+        if (userAlreadyExists)
+        {
+            return Conflict(new { message = "A user with this email address already exists." });
+        }
+
+        var address = new Address
+        {
+            Street = model.Street,
+            City = model.City,
+            State = model.State,
+            ZipCode = model.Zip
+        };
+
+        var registered = await _mediator.Send(new RegisterUserCommand
+        {
+            FirstName = model.FirstName,
+            LastName = model.LastName,
+            Address = address,
+            Email = model.Email,
+            Password = model.Password
+        });
+
+        if(!registered)
+        {
+            return StatusCode(500, new { message = "An error occurred while processing your request. Please try again." });
+        }
 
         return Ok();
     }

@@ -23,11 +23,11 @@ public class GetPersonQueryHandler : IRequestHandler<GetPersonQuery, PersonDTO>
 
     public async Task<PersonDTO> Handle(GetPersonQuery request, CancellationToken cancellationToken)
     {
-        var person = await _databaseService.Persons.FirstOrDefaultAsync(x => x.User.Email == request.Email, cancellationToken);
+        var user = await _databaseService.Users.Include(x => x.Person).Include(x => x.Person.Address).FirstOrDefaultAsync(x => x.Email == request.Email, cancellationToken);
 
-        var newPerson = _mapper.Map<PersonDTO>(person);
+        var mappedPerson = _mapper.Map<PersonDTO>(user.Person);
 
-        return newPerson;
+        return mappedPerson;
     }
         
 }

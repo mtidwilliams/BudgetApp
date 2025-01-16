@@ -1,3 +1,4 @@
+using BudgetApp.Core.Common.Interfaces;
 using BudgetApp.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -12,7 +13,8 @@ public static class Program
         _serviceCollection.AddDbContext<BudgetAppDbContext>(options =>
            options.UseSqlServer(connectionString));
 
+        _serviceCollection.AddScoped<IDatabaseService>(provider => provider.GetService<BudgetAppDbContext>());
+
         return _serviceCollection;
     }
-    
 }
