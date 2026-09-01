@@ -31,14 +31,14 @@ public class AuthController : ControllerBase
 
         var allowedToLogin = await _mediator.Send(new LoginUserCommand { Email = model.Email, Password = model.Password });
 
-        if (allowedToLogin)
+        if (!allowedToLogin)
         {
-            var user = (await _mediator.Send(new GetUserQuery { Email = model.Email }));
-            var token = _tokenService.GenerateToken(user);
-            return Ok(new { Token = token, User = user });
+            return Conflict(new { message = "Unable to find a user with this email address or password. Please try again." });
         }
-
-        return Conflict(new { message = "Unable to find a user with this email address or password. Please try again." });
+        
+        var user = await _mediator.Send(new GetUserQuery { Email = model.Email });
+        var token = _tokenService.GenerateToken(user);
+        return Ok(new { Token = token, User = user, Budget = user.Budget });
     }
 
     [HttpPost("register")]
@@ -78,5 +78,13 @@ public class AuthController : ControllerBase
         }
 
         return Ok();
+    }
+    
+    [HttpPost("refreshToken")]
+    public async Task<IActionResult> RefreshToken([FromBody] LoginModel model)
+    {
+        var user = await _mediator.Send(new GetUserQuery { Email = model.Email });
+        var token = _tokenService.GenerateToken(user);
+        return Ok(new { Token = token });
     }
 }

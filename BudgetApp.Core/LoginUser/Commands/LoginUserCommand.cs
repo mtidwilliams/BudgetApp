@@ -8,8 +8,8 @@ using AutoMapper;
 namespace BudgetApp.Core.GetPerson.Queries;
 public class LoginUserCommand : IRequest<bool>
 {
-    public string Email { get; set; }
-    public string Password { get; set; }
+    public string Email { get; set; } = string.Empty;
+    public string Password { get; set; } = string.Empty;
 }
 
 public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, bool>
@@ -17,9 +17,10 @@ public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, bool>
     private readonly IDatabaseService _databaseService;
     private readonly IMapper _mapper;
 
-    public LoginUserCommandHandler(IDatabaseService databaseService)
+    public LoginUserCommandHandler(IDatabaseService databaseService, IMapper mapper)
     {
         _databaseService = databaseService;
+        _mapper = mapper;
     }
 
     public async Task<bool> Handle(LoginUserCommand request, CancellationToken cancellationToken)

@@ -9,7 +9,7 @@ namespace BudgetApp.Core.Common.DTOs
     public class IncomeSourceDTO
     {
         public Guid IncomeSourceId { get; set; }
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
         public decimal Amount { get; set; }
     }
 }

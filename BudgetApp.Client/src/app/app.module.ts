@@ -2,20 +2,21 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { ToastrModule } from 'ngx-toastr';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
-import { AuthService } from './services/auth.service';
 import { BudgetsComponent } from './budgets/budgets.component';
 import { CurrentBudgetComponent } from './currentBudget/currentBudget.component';
-
-const canAccess = AuthService.prototype.canActivate;
+import { LogoComponent } from './shared/logo/logo.component';
+import { AuthInterceptor } from './services/authInteceptor.service';
+import { BudgetChartComponent } from './chart/budget-chart.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,9 @@ const canAccess = AuthService.prototype.canActivate;
     LoginComponent,
     RegisterComponent,
     BudgetsComponent,
-    CurrentBudgetComponent
+    CurrentBudgetComponent,
+    LogoComponent,
+    BudgetChartComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -34,16 +37,23 @@ const canAccess = AuthService.prototype.canActivate;
     RouterModule.forRoot([
       { path: '', component: LoginComponent, pathMatch: 'full' },
       { path: 'register', component: RegisterComponent, pathMatch: 'full' },
-      { path: 'home', component: HomeComponent, canActivate: [canAccess] },
+      { path: 'home', component: HomeComponent, pathMatch: 'full' },
     ]),
     ToastrModule.forRoot({
       timeOut: 3000,
       positionClass: 'toast-bottom-right',
       preventDuplicates: true,
     }),
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    DragDropModule,
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

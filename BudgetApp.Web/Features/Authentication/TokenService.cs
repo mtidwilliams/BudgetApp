@@ -9,7 +9,7 @@ using System.Text;
 
 public interface ITokenService
 {
-    string GenerateToken(UserDTO user);
+    string GenerateToken(User user);
 }
 
 public class TokenService : ITokenService
@@ -21,7 +21,7 @@ public class TokenService : ITokenService
         _appSettings = appSettings?.Value;
     }
 
-    public string GenerateToken(UserDTO user)
+    public string GenerateToken(User user)
     {
         var claims = new[]
         {
@@ -37,7 +37,7 @@ public class TokenService : ITokenService
             _appSettings?.Issuer,
             _appSettings?.Audience,
             claims,
-            expires: DateTime.Now.AddMinutes(30),
+            expires: DateTime.Now.AddMinutes(20),
             signingCredentials: creds);
 
         return new JwtSecurityTokenHandler().WriteToken(token);

@@ -13,7 +13,7 @@ public static class Program
         _serviceCollection.AddDbContext<BudgetAppDbContext>(options =>
            options.UseSqlServer(connectionString));
 
-        _serviceCollection.AddScoped<IDatabaseService>(provider => provider.GetService<BudgetAppDbContext>());
+        _serviceCollection.AddScoped<IDatabaseService>(provider => provider.GetService<BudgetAppDbContext>()!);
 
         return _serviceCollection;
     }

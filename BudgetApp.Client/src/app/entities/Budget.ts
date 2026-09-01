@@ -4,11 +4,11 @@ import { IncomeSource } from "./IncomeSource";
 export class Budget {
     budgetId: string;
     expenses: Expense[];
-    income: IncomeSource[];
+    incomeSources: IncomeSource[];
 
-  constructor(budgetId: string, expenses: Expense[], income: IncomeSource[]) {
+  constructor(budgetId: string, expenses: Expense[], incomeSources: IncomeSource[]) {
     this.budgetId = budgetId;
     this.expenses = expenses;
-    this.income = income;
+    this.incomeSources = incomeSources;
   }
 }

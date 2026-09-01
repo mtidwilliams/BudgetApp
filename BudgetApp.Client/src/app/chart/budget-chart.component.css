@@ -1,0 +1,20 @@
+.chart-container {
+    display: flex;
+    justify-content: start;
+    flex-wrap: wrap;
+    gap: 2rem;
+    padding: 1rem;
+  }
+  
+  .chart-box {
+    flex: 1 1 300px;
+    max-width: 500px;
+    min-width: 250px;
+    aspect-ratio: 1 / 1;
+    position: relative;
+  }
+  
+  .chart-box > canvas {
+    width: 100% !important;
+    height: 100% !important;
+  }

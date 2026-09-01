@@ -27,25 +27,26 @@ export class LoginComponent {
   }
 
   login() {
-    this.authService.login(this.username, this.password).subscribe(
-      result => {
-        localStorage.setItem('authToken', result.token);
-        this.router.navigate(
-          ['/home'], {
-            state: {
-              showToast: true,
-              toastMessage: 'Welcome to Build-a-Budget, '+result.user.person.firstName+'!',
-              toastTitle: 'Success!',
-              user: result.user
+    this.authService.login(this.username, this.password).subscribe({
+      next: (result) => {
+          localStorage.setItem('authToken', result.token);
+          this.router.navigate(
+            ['/home'], 
+            { state: {
+                showToast: true,
+                toastMessage: 'Welcome to Build-a-Budget, '+result.user.person.firstName+'!',
+                toastTitle: 'Success!',
+                user: result.user,
+                budget: result.budget
+              }
             }
-          },
-        );
+          );
       },
-      error => {
+      error: (error) => {
         this.toastr.error(error.error.message ?? "", 'Login failed.');
         this.error = 'Login failed.';
         clearSpinner();
       }
-    );
+    });
   }
 }

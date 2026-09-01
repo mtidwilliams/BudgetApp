@@ -9,6 +9,11 @@ public class BudgetAppDbContext : DbContext, IDatabaseService
     {
     }
 
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.UseLazyLoadingProxies(); // Enable lazy loading
+    }
+
     public virtual DbSet<User> Users { get; set; }
     public virtual DbSet<Address> Addresses { get; set; }
     public virtual DbSet<Person> Persons { get; set; }
@@ -24,9 +29,6 @@ public class BudgetAppDbContext : DbContext, IDatabaseService
 
     // public virtual DbSet<Setting> Settings { get; set; }
 
-    public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-    {
-
-        return await base.SaveChangesAsync(cancellationToken);
-    }
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) 
+        => await base.SaveChangesAsync(cancellationToken);
 }

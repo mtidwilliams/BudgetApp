@@ -28,15 +28,15 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, b
     {
         var person = new Person
         {
-            FirstName = request.FirstName,
-            LastName = request.LastName,
-            Address = request.Address
+            FirstName = request.FirstName!,
+            LastName = request.LastName!,
+            Address = request.Address!
         };
 
         var user = new User
         {
-            Email = request.Email,
-            Password = request.Password,
+            Email = request.Email!,
+            Password = request.Password!,
             Person = person,
             Budget = new Budget()
         };
