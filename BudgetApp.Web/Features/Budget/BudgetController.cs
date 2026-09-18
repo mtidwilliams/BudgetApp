@@ -21,23 +21,10 @@ public class BudgetController : Controller
         _mediator = mediator;
     }
 
-    private async Task<User> GetUser()
-    {
-        var userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value!);
-        return await _mediator.Send(new GetUserQuery { UserId = userId });
-    }
-
     [HttpPost("getCurrentBudget")]
     public async Task<Budget?> GetCurrentBudget()
     {
-        var budget = (await GetUser()).Budget;
-        if(budget != null) {
-            var orderedExpenses = budget.Expenses?.OrderBy(x => x.SortOrder).ToList();
-            var orderedIncomeSources = budget.IncomeSources?.OrderBy(x => x.SortOrder).ToList();
-            budget.Expenses = orderedExpenses;
-            budget.IncomeSources = orderedIncomeSources;
-        }
-        return budget;
+        return OrderBudget((await GetUser()).Budget);
     }
 
     [HttpPost("addExpense")]
@@ -56,7 +43,7 @@ public class BudgetController : Controller
             return Conflict(new { message = "An error occurred adding your expense. Please try again." });
         }
 
-        return Ok(new { Budget = user.Budget });
+        return Ok(new { Budget = OrderBudget(user.Budget) });
     }
 
     [HttpPost("updateExpense")]
@@ -75,7 +62,7 @@ public class BudgetController : Controller
             return Conflict(new { message = "An error occurred updating your expense. Please try again." });
         }
 
-        return Ok(new { Budget = user.Budget });
+        return Ok(new { Budget = OrderBudget(user.Budget) });
     }
 
     [HttpPost("removeExpense")]
@@ -94,7 +81,7 @@ public class BudgetController : Controller
             return Conflict(new { message = "An error occurred deleting your expense. Please try again." });
         }
 
-        return Ok(new { Budget = user.Budget });
+        return Ok(new { Budget = OrderBudget(user.Budget) });
     }
 
     [HttpPost("addIncomeSource")]
@@ -113,7 +100,7 @@ public class BudgetController : Controller
             return Conflict(new { message = "An error occurred adding your income source. Please try again." });
         }
 
-        return Ok(new { Budget = user.Budget });
+        return Ok(new { Budget = OrderBudget(user.Budget) });
     }
 
     [HttpPost("updateIncomeSource")]
@@ -132,7 +119,7 @@ public class BudgetController : Controller
             return Conflict(new { message = "An error occurred updating your income source. Please try again." });
         }
 
-        return Ok(new { Budget = user.Budget });
+        return Ok(new { Budget = OrderBudget(user.Budget) });
     }
 
     [HttpPost("removeIncomeSource")]
@@ -151,7 +138,7 @@ public class BudgetController : Controller
             return Conflict(new { message = "An error occurred deleting your income source. Please try again." });
         }
 
-        return Ok(new { Budget = user.Budget });
+        return Ok(new { Budget = OrderBudget(user.Budget) });
     }
 
     [HttpPost("saveBudgetOrientation")]
@@ -170,6 +157,22 @@ public class BudgetController : Controller
             return Conflict(new { message = "An error occurred updating your budget's orientation. Please try again." });
         }
 
-        return Ok(new { Budget = user.Budget });
+        return Ok(new { Budget = OrderBudget(user.Budget) });
+    }
+
+    private async Task<User> GetUser()
+    {
+        var userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value!);
+        return await _mediator.Send(new GetUserQuery { UserId = userId });
+    }
+
+    private static Budget? OrderBudget(Budget? budget)
+    {
+        if (budget != null)
+        {
+            budget.Expenses = budget.Expenses?.OrderBy(x => x.SortOrder).ToList();
+            budget.IncomeSources = budget.IncomeSources?.OrderBy(x => x.SortOrder).ToList();
+        }
+        return budget;
     }
 }
